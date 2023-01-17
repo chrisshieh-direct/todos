@@ -1,0 +1,15 @@
+<section id="todos">
+  <header>
+    <h2><%= @list[:name] %></h2>
+  </header>
+  <ul id="todos">
+    <% @list[:todos].each do |todo| %>
+      <li>
+        <a href="#"><h3><%= todo %></h3>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</section>
+
+<a href="/lists">All Lists</a>

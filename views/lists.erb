@@ -1,13 +1,7 @@
-<% if session[:success] %>
-<div id="flashFade" class="flash success">
-  <p><%= session.delete(:success) %></p>
-</div>
-<% end %>
-
 <ul id="lists">
-  <% @lists.each do |list| %>
+  <% @lists.each_with_index do |list, idx| %>
     <li>
-      <a href="#">
+      <a href="/lists/<%= idx %>">
         <h2><%= list[:name] %></h2>
         <p><%= list[:todos].size %></p>
       </a>
@@ -18,8 +12,4 @@
 <a href="/lists/new">New List</a><br />
 <a href="/lists/reset">Delete All Lists</a>
 
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-    document.getElementById("flashFade").classList.add("fadeOut");
-}, 2000);
-</script>
+<script>setTimeout(function(){document.getElementById("flashFade").classList.add("fadeOut");}, 2000);</script>

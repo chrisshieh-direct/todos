@@ -11,8 +11,19 @@
     <header>
       <h1>Todo Tracker</h1>
     </header>
+    <% if session[:error] %>
+    <div id="flashFade" class="flash error">
+      <p><%= session.delete(:error) %></p>
+    </div>
+    <% end %>
+    <% if session[:success] %>
+    <div id="flashFade" class="flash success">
+      <p><%= session.delete(:success) %></p>
+    </div>
+    <% end %>
     <main>
       <%= yield %>
     </main>
+  <script>setTimeout(function(){document.getElementById("flashFade").classList.add("fadeOut");}, 2000);</script>
   </body>
 </html>

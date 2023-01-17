@@ -147,18 +147,21 @@ form fieldset.actions a:hover {
   opacity: 1;
 }
 
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+#flashFade {
+  animation: fadeOut 2s ease;
+  animation-fill-mode: forwards;
+  animation-delay: 2s;
+}
+
 .flash.success {
   color: #33cc99;
   background: #CBF2E5;
   opacity: 1;
-}
-
-/* this is a comment */
-
-.flash.success.fadeOut {
-  color: #33cc99;
-  background: #CBF2E5;
-  opacity: 0;
 }
 
 #no_list {
