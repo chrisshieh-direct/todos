@@ -43,6 +43,10 @@ get '/lists' do
   erb :lists
 end
 
+get "/superblah" do
+  redirect "html://google.com"
+end
+
 def error_for_list_name(name)
   if !(1..100).cover? name.length
     'List name must be between 1 and 100 characters.'
