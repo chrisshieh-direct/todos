@@ -9,7 +9,6 @@
   <% end %>
 </ul>
 
-<a href="/lists/new">New List</a><br />
-<a href="/lists/reset">Delete All Lists</a>
-
-<script>setTimeout(function(){document.getElementById("flashFade").classList.add("fadeOut");}, 2000);</script>
+<% content_for :header_links do %>
+  <a class="add" href="/lists/new">New List</a><br /><a class="delete" href="/lists/reset">Delete All Lists</a>
+<% end %>

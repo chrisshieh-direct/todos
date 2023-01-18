@@ -3,6 +3,7 @@
 require 'sinatra'
 require 'sinatra/reloader' if development?
 require 'tilt/erubis'
+require 'sinatra/content_for'
 
 configure do
   enable :sessions
@@ -49,10 +50,79 @@ end
 
 get '/lists/reset' do
   session[:lists] = []
+  session[:success] = "All lists deleted."
   redirect '/lists'
 end
 
 get '/lists/:id' do
-  @list = session[:lists][params[:id].to_i]
+  @id = params[:id].to_i
+  @list = session[:lists][@id]
   erb :list
+end
+
+get '/lists/:id/edit' do
+  @id = params[:id].to_i
+  @list = session[:lists][@id]
+  erb :edit_list
+end
+
+post '/lists/:id' do
+  list_name = params[:list_name].strip
+  error = error_for_list_name(list_name)
+  @id = params[:id].to_i
+  @list = session[:lists][@id]
+
+  if error
+    session[:error] = error
+    erb :edit_list
+  else
+    @list[:name] = list_name
+    session[:success] = 'Name changed!'
+    redirect '/lists'
+  end
+end
+
+post '/lists/:id/delete' do
+  @id = params[:id].to_i
+  removed = session[:lists].delete_at(@id)
+  session[:success] = "Todo List '#{removed[:name]}' deleted."
+  redirect "/lists"
+end
+
+def error_for_todo(name)
+  if !(1..100).cover? name.length
+    'Todo text must be between 1 and 100 characters.'
+  end
+end
+
+post "/lists/:id/todos" do
+  @id = params[:id].to_i
+  text = params[:todo].strip
+  @list = session[:lists][@id]
+  error = error_for_todo(text)
+  if error
+    session[:error] = error
+    erb :list
+  else
+    @list[:todos] << { name: text, completed: false }
+    session[:success] = "New todo added!"
+    redirect "/lists/#{@id}"
+  end
+end
+
+post "/lists/:id/todos/:todo_id/delete" do
+  @id = params[:id].to_i
+  @todo_id = params[:todo_id].to_i
+  session[:lists][@id][:todos].delete_at(@todo_id)
+  session[:success] = "Todo was removed."
+  redirect "/lists/#{:id}"
+end
+
+post "/lists/:id/todos/:todo_id" do
+  @intended_status = params[:completed] == 'true' ? true : false
+  @id = params[:id].to_i
+  @todo_id = params[:todo_id].to_i
+  session[:lists][@id][:todos][@todo_id][:completed] = @intended_status
+  session[:success] = "Todo was marked Complete."
+  redirect "/lists/#{:id}"
 end
