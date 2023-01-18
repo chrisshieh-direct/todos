@@ -4,6 +4,9 @@ GEM
     multi_json (1.15.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
+    nio4r (2.5.8)
+    puma (6.0.2)
+      nio4r (~> 2.0)
     rack (2.2.6)
     rack-protection (3.0.5)
       rack
@@ -25,8 +28,12 @@ PLATFORMS
   x86_64-darwin-22
 
 DEPENDENCIES
+  puma
   sinatra
   sinatra-contrib
+
+RUBY VERSION
+   ruby 3.2.0p0
 
 BUNDLED WITH
    2.4.4

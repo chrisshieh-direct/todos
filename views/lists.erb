@@ -1,9 +1,10 @@
 <ul id="lists">
-  <% @lists.each_with_index do |list, idx| %>
-    <li>
+
+  <% sort_lists(@lists) do |list, idx| %>
+    <li <%= "class='complete'" if list_complete?(list) %>>
       <a href="/lists/<%= idx %>">
         <h2><%= list[:name] %></h2>
-        <p><%= list[:todos].size %></p>
+        <p><%= list[:todos].select { |x| x[:completed] == true }.length %> / <%= list[:todos].size %></p>
       </a>
     </li>
   <% end %>

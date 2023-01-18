@@ -14,6 +14,26 @@ before do
   session[:lists] ||= []
 end
 
+helpers do
+  def list_complete?(list)
+    list[:todos].size > 0 && list[:todos].all? { |x| x[:completed] == true }
+  end
+
+  def sort_lists(arr, &block)
+    incomplete = {}
+    complete = {}
+    arr.each_with_index do |list, idx|
+      if list_complete?(list)
+        complete[list] = idx
+      else
+        incomplete[list] = idx
+      end
+    end
+    complete.each(&block)
+    incomplete.each(&block)
+  end
+end
+
 get '/' do
   redirect '/lists'
 end
@@ -82,6 +102,14 @@ post '/lists/:id' do
   end
 end
 
+post "/lists/:id/complete_all" do
+  @id = params[:id].to_i
+  @list = session[:lists][@id]
+  @list[:todos].each { |todo| todo[:completed] = true }
+  session[:success] = "All todos were checked as completed."
+  redirect "/lists/#{@id}"
+end
+
 post '/lists/:id/delete' do
   @id = params[:id].to_i
   removed = session[:lists].delete_at(@id)
@@ -119,10 +147,10 @@ post "/lists/:id/todos/:todo_id/delete" do
 end
 
 post "/lists/:id/todos/:todo_id" do
-  @intended_status = params[:completed] == 'true' ? true : false
+  intended_status = params[:completed] == 'true'
   @id = params[:id].to_i
   @todo_id = params[:todo_id].to_i
-  session[:lists][@id][:todos][@todo_id][:completed] = @intended_status
-  session[:success] = "Todo was marked Complete."
-  redirect "/lists/#{:id}"
+  session[:lists][@id][:todos][@todo_id][:completed] = intended_status
+  session[:success] = "Todo has been updated."
+  redirect "/lists/#{@id}"
 end
