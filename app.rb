@@ -8,6 +8,7 @@ require 'sinatra/content_for'
 configure do
   enable :sessions
   set :session_secret, 'afb00d68fbae86e81ff2fe04c3206bba5f0c4165401c3d1bf3e8fdbe222d2081'
+  set :erb, :escape_html => true
 end
 
 before do
@@ -43,10 +44,6 @@ get '/lists' do
   erb :lists
 end
 
-get "/superblah" do
-  redirect "html://google.com"
-end
-
 def error_for_list_name(name)
   if !(1..100).cover? name.length
     'List name must be between 1 and 100 characters.'
@@ -80,6 +77,10 @@ end
 
 get '/lists/:id' do
   @id = params[:id].to_i
+  if @id >= session[:lists].size
+    session[:error] = "The specified list was not found."
+    redirect "/lists"
+  end
   @list = session[:lists][@id]
   erb :list
 end
