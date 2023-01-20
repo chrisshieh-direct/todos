@@ -1,1 +1,6 @@
-console.log("this is a test");
+$(function() {
+  $("form.delete").submit(function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+  });
+});
