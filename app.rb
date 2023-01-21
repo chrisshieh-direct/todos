@@ -118,8 +118,12 @@ end
 post '/lists/:id/delete' do
   @id = params[:id].to_i
   removed = session[:lists].delete_at(@id)
-  session[:success] = "Todo List '#{removed[:name]}' deleted."
-  redirect "/lists"
+  if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
+    "/lists"
+  else
+    session[:success] = "Todo List '#{removed[:name]}' deleted."
+    redirect "/lists"
+  end
 end
 
 def error_for_todo(name)
@@ -147,8 +151,12 @@ post "/lists/:id/todos/:todo_id/delete" do
   @id = params[:id].to_i
   @todo_id = params[:todo_id].to_i
   session[:lists][@id][:todos].delete_at(@todo_id)
-  session[:success] = "Todo was removed."
-  redirect "/lists/#{:id}"
+  if env["HTTP_X_REQUESTED_WITH"] == "XMLHttpRequest"
+    status 204
+  else
+    session[:success] = "Todo was removed."
+    redirect "/lists/#{:id}"
+  end
 end
 
 post "/lists/:id/todos/:todo_id" do
