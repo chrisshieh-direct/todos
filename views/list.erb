@@ -14,11 +14,11 @@
     <% @list[:todos].each_with_index do |todo, idx| %>
       <li <%== "class='complete'" if todo[:completed] %>>
         <h3><%= todo[:name] %></h3>
-          <form action="/lists/<%= @id %>/todos/<%= idx %>" method="post" class="check">
+          <form action="/lists/<%= @list[:id] %>/todos/<%= todo[:id] %>" method="post" class="check">
             <input type="hidden" name="completed" value="<%= todo[:completed] ? 'false' : 'true' %>">
             <button type="submit">Complete</button>
           </form>
-        <form action="/lists/<%= @id %>/todos/<%= idx %>/delete" method="post" class="delete"><button type="submit">Delete</button></form>
+        <form action="/lists/<%= @list[:id] %>/todos/<%= todo[:id] %>/delete" method="post" class="delete"><button type="submit">Delete</button></form>
       </li>
     <% end %>
   </ul>
